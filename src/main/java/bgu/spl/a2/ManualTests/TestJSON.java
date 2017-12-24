@@ -11,7 +11,7 @@ public class TestJSON {
         ActorThreadPool pool = new ActorThreadPool(8);
 
         OpenNewCourse openNewCourse = new OpenNewCourse("Intro to CS", 30, null);
-        AddStudent addStudent = new AddStudent(123456789);
+        AddStudent addStudent = new AddStudent("123456789");
         pool.start();
 
 

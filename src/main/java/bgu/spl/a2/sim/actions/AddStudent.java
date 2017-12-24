@@ -10,17 +10,17 @@ import java.util.ArrayList;
 public class AddStudent extends Action<String> {
 
 
-    private long signature;
+    private String studentID;
 
-    public AddStudent(long signature) {
-        this.signature = signature;
+    public AddStudent(String studentID) {
+        this.studentID = studentID;
     }
 
     @Override
     protected void start() {
-        String studentID = String.valueOf(signature);
 
-        SubAddStudent subAddStudent = new SubAddStudent(signature);
+
+        SubAddStudent subAddStudent = new SubAddStudent(studentID);
         ArrayList<Action<?>> actions = new ArrayList<>();
 
         actions.add(subAddStudent);

@@ -5,16 +5,16 @@ import bgu.spl.a2.sim.privateStates.StudentPrivateState;
 
 public class SubAddStudent extends Action<String> {
 
-    private long signature;
+    private String studentID;
 
-    public SubAddStudent(long signature) {
-        this.signature = signature;
+    public SubAddStudent(String studentID) {
+        this.studentID = studentID;
     }
 
     @Override
     protected void start() {
 
-        ((StudentPrivateState) getPrivateState()).setSignature(signature);
-        complete("Student " + signature + " added successfully");
+        ((StudentPrivateState) getPrivateState()).setSignature(911);//TODO change signature to computer sigfail/success
+        complete("Student " + studentID + " added successfully");
     }
 }

@@ -14,7 +14,7 @@ public class UniActionTests {
         ActorThreadPool pool = new ActorThreadPool(8);
         Action<String> openNewCourse1 = new OpenNewCourse("SPL", 300, null);
         Action<String> openNewCourse2 = new OpenNewCourse("Data Bases", 200, null);
-        Action<String> addStudent1 = new AddStudent(123456789);
+        Action<String> addStudent1 = new AddStudent("123456789");
 
         pool.start();
 

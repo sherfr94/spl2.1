@@ -41,13 +41,17 @@ public class Simulator {
 
         for (ActionConfig ac : phase1Actions) {
             String actionName = ac.getAction();
+
             if (actionName.equals("Open Course")) {
-                OpenNewCourse openNewCourse = new OpenNewCourse(ac.getCourse(), ac.getNumber(), ac.getPrerequisites());
+                OpenNewCourse openNewCourse = new OpenNewCourse(ac.getCourse(), ac.getSpace(), ac.getPrerequisites());
                 actorThreadPool.submit(openNewCourse, ac.getDepartment(), new DepartmentPrivateState());
+                actorThreadPool.getPrivateState(ac.getDepartment()).addRecord(actionName);
             } else if (actionName.equals("Add Student")) {
                 AddStudent addStudent = new AddStudent(ac.getStudent());
                 actorThreadPool.submit(addStudent, ac.getDepartment(), new DepartmentPrivateState());
+                actorThreadPool.getPrivateState(ac.getDepartment()).addRecord(actionName);
             }
+
 
         }
 

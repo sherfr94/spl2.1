@@ -21,7 +21,7 @@ public class ActionConfig {
 
     @SerializedName("Student")
     @Expose
-    private Long student;
+    private String student;
 
     @SerializedName("Space")
     @Expose
@@ -76,11 +76,11 @@ public class ActionConfig {
         this.course = course;
     }
 
-    public Long getStudent() {
+    public String getStudent() {
         return student;
     }
 
-    public void setStudent(Long student) {
+    public void setStudent(String student) {
         this.student = student;
     }
 

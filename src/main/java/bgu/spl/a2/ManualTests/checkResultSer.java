@@ -78,7 +78,7 @@ public class checkResultSer {
                 System.out.println(logger);
 
                 System.out.println("\"availableSpots\": \"" + ((CoursePrivateState) res.get(course)).getAvailableSpots().toString() + "\",");
-                System.out.println("\"registered\": \"" + ((CoursePrivateState) res.get(course)).getRegistered().toString() + "\",");
+                //System.out.println("\"registered\": \"" + ((CoursePrivateState) res.get(course)).getRegistered().toString() + "\",");
 
                 String studentList = "\"regStudents\" : [";
                 for (String student : ((CoursePrivateState) res.get(course)).getRegStudents())
