@@ -154,10 +154,6 @@ public class Simulator {
             action = new AdministrativeCheck(ac.getStudents(), ac.getConditions(), Warehouse.getMutex(ac.getComputer()));
             actorThreadPool.submit(action, ac.getDepartment(), new DepartmentPrivateState());
             actorThreadPool.getPrivateState(ac.getDepartment()).addRecord(actionName);
-        } else if (actionName.equals("End Registration")) {
-            action = new EndRegistration();
-            actorThreadPool.submit(action, ac.getDepartment(), new DepartmentPrivateState());
-            actorThreadPool.getPrivateState(ac.getDepartment()).addRecord(actionName);
         }
 
 
@@ -173,9 +169,9 @@ public class Simulator {
 
 
     public static int main(String[] args) throws FileNotFoundException {
-        //for(int i=0;i<100;i++){
-        //System.out.println("SIMULATOR RUNNING #" + i);
-        System.out.println("SIMULATOR RUNNING");
+        for (int i = 0; i < 100; i++) {
+            System.out.println("SIMULATOR RUNNING #" + i);
+            //System.out.println("SIMULATOR RUNNING");
         String fileName = args[0];
 
         Gson gson = new Gson();
@@ -207,7 +203,7 @@ public class Simulator {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        //}
+        }
 
 
         //TODO do not forget warehouse and computer

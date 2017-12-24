@@ -58,7 +58,7 @@ public class Promise<T> {
         this.isResolved = true;
 
         for (callback subscriber : subscribers) {
-            subscriber.call(); //TODO: BUG nullpointerexception
+            subscriber.call(); //TODO: BUG nullpointerexception if(subscriber!=null)
         }
     }
 
