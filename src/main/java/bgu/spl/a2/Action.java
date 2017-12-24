@@ -1,7 +1,7 @@
 package bgu.spl.a2;
 
 import java.util.Collection;
-import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * an abstract class that represents an action that may be executed using the
@@ -79,19 +79,17 @@ public abstract class Action<R> {
      */
     protected final void then(Collection<? extends Action<?>> actions, callback callback) {
         this.callback = callback;
-        CountDownLatch countRemainingActions = new CountDownLatch(actions.size());
+        AtomicInteger numOfTasks = new AtomicInteger(actions.size());
 
         for (Action<?> a : actions) {
 
             //Decrease count when resolved
             a.getResult().subscribe(() -> {
-                if (a.getResult().isResolved())
-                    countRemainingActions.countDown();
+                numOfTasks.getAndDecrement();
+                if (numOfTasks.get() == 0) pool.submit(this, this.actorId, this.actorState);
             });
         }
 
-        //Add back current action to original actor
-        pool.submit(this, this.actorId, this.actorState);
 
     }
 

@@ -12,6 +12,7 @@ import bgu.spl.a2.Promise;
 import bgu.spl.a2.sim.actions.AddStudent;
 import bgu.spl.a2.sim.actions.OpenNewCourse;
 import bgu.spl.a2.sim.actions.ParticipatingInCourse;
+import bgu.spl.a2.sim.actions.Unregister;
 import bgu.spl.a2.sim.privateStates.CoursePrivateState;
 import bgu.spl.a2.sim.privateStates.DepartmentPrivateState;
 import com.google.gson.Gson;
@@ -75,17 +76,11 @@ public class Simulator {
 
         //Phase3
         ArrayList<ActionConfig> phase3Actions = config.getPhase3();
-        latch = new CountDownLatch(phase3Actions.size());
 
         for (ActionConfig ac : phase3Actions) {
             doAction(ac);
         }
 
-        try {
-            latch.await();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
 
 
 
@@ -129,7 +124,14 @@ public class Simulator {
             actorThreadPool.submit(action, ac.getDepartment(), new DepartmentPrivateState());
             actorThreadPool.getPrivateState(ac.getDepartment()).addRecord(actionName);
         } else if (actionName.equals("Participate In Course")) {
+
             action = new ParticipatingInCourse(ac.getStudent(), ac.getGrade().get(0));
+            actorThreadPool.submit(action, ac.getCourse(), new CoursePrivateState());
+            actorThreadPool.getPrivateState(ac.getCourse()).addRecord(actionName);
+
+
+        } else if (actionName.equals("Unregister")) {
+            action = new Unregister(ac.getStudent());
             actorThreadPool.submit(action, ac.getCourse(), new CoursePrivateState());
             actorThreadPool.getPrivateState(ac.getCourse()).addRecord(actionName);
         }

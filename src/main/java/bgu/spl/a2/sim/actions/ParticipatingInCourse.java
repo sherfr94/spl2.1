@@ -1,6 +1,7 @@
 package bgu.spl.a2.sim.actions;
 
 import bgu.spl.a2.Action;
+import bgu.spl.a2.Promise;
 import bgu.spl.a2.sim.privateStates.CoursePrivateState;
 import bgu.spl.a2.sim.privateStates.StudentPrivateState;
 import bgu.spl.a2.sim.subActions.SubParticipatingInCourse;
@@ -20,13 +21,11 @@ public class ParticipatingInCourse extends Action<String> {
     @Override
     protected void start() {
 
-        //check for space
         if (((CoursePrivateState) getPrivateState()).getAvailableSpots() == 0) {
-            System.out.println(((CoursePrivateState) getPrivateState()).getAvailableSpots());
-            complete("Can't register student: No space left");
+            complete("Participate failed: No space left");
             System.out.println(getResult().get());
-            return;
         }
+
 
         //enough space
         else {
@@ -36,29 +35,31 @@ public class ParticipatingInCourse extends Action<String> {
             ArrayList<Action<?>> actions = new ArrayList<>();
 
             actions.add(subParticipatingInCourse);
-            sendMessage(subParticipatingInCourse, studentID, new StudentPrivateState());
+            getPool().submit(subParticipatingInCourse, studentID, new StudentPrivateState());
+            Promise<Boolean> promise = subParticipatingInCourse.getResult();
 
-            then(actions, () -> {
-
+            promise.subscribe(() -> {
                 Boolean result = subParticipatingInCourse.getResult().get();
                 //prerequisits ok
-                if (result) {
+                if (result) {//TODO: BUG: nullPointerExeption
 
                     privateState.getRegStudents().add(studentID);
                     privateState.setAvailableSpots(privateState.getAvailableSpots() - 1);
                     privateState.setRegistered(privateState.getRegistered() + 1);
-                    complete("Student: " + studentID + ", participates in course: " + getActorId());
+                    complete("Participate succeed: Student: " + studentID + " registered to course: " + getActorId());
                     System.out.println(getResult().get());
                 }
                 //prerequisites not ok
                 else {
-                    complete("Can't register student: No Prerequisites");
+                    complete("Participate failed: No prerequisites");
                     System.out.println(getResult().get());
                 }
             });
 
+
         }
-
-
     }
+
+
 }
+

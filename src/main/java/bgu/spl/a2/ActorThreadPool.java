@@ -80,6 +80,8 @@ public class ActorThreadPool {
                         foundAction = true;
                         Action<?> currAction = actorQueue.poll();
                         currAction.handle(ActorThreadPool.this, actorID, privateStateMap.get(actorID));
+
+
                         isTaken.get(actorID).compareAndSet(true, false);
                     }
                 }
