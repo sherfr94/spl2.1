@@ -39,6 +39,7 @@ public class OpenNewCourse extends Action<String> {
 
             //complete
             complete("Opened course: " + courseName);
+
             System.out.println(getResult().get());
 
         });

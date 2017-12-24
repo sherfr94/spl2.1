@@ -5,10 +5,14 @@
  */
 package bgu.spl.a2.sim;
 
+import bgu.spl.a2.Action;
 import bgu.spl.a2.ActorThreadPool;
 import bgu.spl.a2.PrivateState;
+import bgu.spl.a2.Promise;
 import bgu.spl.a2.sim.actions.AddStudent;
 import bgu.spl.a2.sim.actions.OpenNewCourse;
+import bgu.spl.a2.sim.actions.ParticipatingInCourse;
+import bgu.spl.a2.sim.privateStates.CoursePrivateState;
 import bgu.spl.a2.sim.privateStates.DepartmentPrivateState;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
@@ -18,6 +22,7 @@ import json.Config;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.concurrent.CountDownLatch;
 
 /**
  * A class describing the simulator for part 2 of the assignment
@@ -25,6 +30,7 @@ import java.util.HashMap;
 public class Simulator {
 
     private static Config config;
+    private static CountDownLatch latch;
 
     public static void setConfig(Config config) {
         Simulator.config = config;
@@ -37,25 +43,53 @@ public class Simulator {
      */
     public static void start() {
 
+
+        //Phase1
         ArrayList<ActionConfig> phase1Actions = config.getPhase1();
+        actorThreadPool.start();
+        latch = new CountDownLatch(phase1Actions.size());
 
         for (ActionConfig ac : phase1Actions) {
-            String actionName = ac.getAction();
-
-            if (actionName.equals("Open Course")) {
-                OpenNewCourse openNewCourse = new OpenNewCourse(ac.getCourse(), ac.getSpace(), ac.getPrerequisites());
-                actorThreadPool.submit(openNewCourse, ac.getDepartment(), new DepartmentPrivateState());
-                actorThreadPool.getPrivateState(ac.getDepartment()).addRecord(actionName);
-            } else if (actionName.equals("Add Student")) {
-                AddStudent addStudent = new AddStudent(ac.getStudent());
-                actorThreadPool.submit(addStudent, ac.getDepartment(), new DepartmentPrivateState());
-                actorThreadPool.getPrivateState(ac.getDepartment()).addRecord(actionName);
-            }
-
-
+            doAction(ac);
         }
 
-        actorThreadPool.start();
+        try {
+            latch.await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        //Phase2
+        ArrayList<ActionConfig> phase2Actions = config.getPhase2();
+        latch = new CountDownLatch(phase2Actions.size());
+
+        for (ActionConfig ac : phase2Actions) {
+            doAction(ac);
+        }
+
+        try {
+            latch.await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        //Phase3
+        ArrayList<ActionConfig> phase3Actions = config.getPhase3();
+        latch = new CountDownLatch(phase3Actions.size());
+
+        for (ActionConfig ac : phase3Actions) {
+            doAction(ac);
+        }
+
+        try {
+            latch.await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+
+
+
     }
 
     /**
@@ -78,6 +112,36 @@ public class Simulator {
             e.printStackTrace();
         }
         return actorThreadPool.getPrivateStateMap();
+    }
+
+
+    public static void doAction(ActionConfig ac) {
+
+        Action<String> action = null;
+        String actionName = ac.getAction();
+
+        if (actionName.equals("Open Course")) {
+            action = new OpenNewCourse(ac.getCourse(), ac.getSpace(), ac.getPrerequisites());
+            actorThreadPool.submit(action, ac.getDepartment(), new DepartmentPrivateState());
+            actorThreadPool.getPrivateState(ac.getDepartment()).addRecord(actionName);
+        } else if (actionName.equals("Add Student")) {
+            action = new AddStudent(ac.getStudent());
+            actorThreadPool.submit(action, ac.getDepartment(), new DepartmentPrivateState());
+            actorThreadPool.getPrivateState(ac.getDepartment()).addRecord(actionName);
+        } else if (actionName.equals("Participate In Course")) {
+            action = new ParticipatingInCourse(ac.getStudent(), ac.getGrade().get(0));
+            actorThreadPool.submit(action, ac.getCourse(), new CoursePrivateState());
+            actorThreadPool.getPrivateState(ac.getCourse()).addRecord(actionName);
+        }
+
+        if (action != null) {
+            Promise<String> promise = action.getResult();
+            promise.subscribe(() -> {
+                latch.countDown();
+            });
+        }
+
+
     }
 
 
