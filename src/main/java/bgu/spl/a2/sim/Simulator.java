@@ -7,6 +7,7 @@ package bgu.spl.a2.sim;
 
 import bgu.spl.a2.ActorThreadPool;
 import bgu.spl.a2.PrivateState;
+import bgu.spl.a2.sim.actions.AddStudent;
 import bgu.spl.a2.sim.actions.OpenNewCourse;
 import bgu.spl.a2.sim.privateStates.DepartmentPrivateState;
 import com.google.gson.Gson;
@@ -14,8 +15,7 @@ import com.google.gson.stream.JsonReader;
 import json.ActionConfig;
 import json.Config;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -45,7 +45,8 @@ public class Simulator {
                 OpenNewCourse openNewCourse = new OpenNewCourse(ac.getCourse(), ac.getNumber(), ac.getPrerequisites());
                 actorThreadPool.submit(openNewCourse, ac.getDepartment(), new DepartmentPrivateState());
             } else if (actionName.equals("Add Student")) {
-
+                AddStudent addStudent = new AddStudent(ac.getStudent());
+                actorThreadPool.submit(addStudent, ac.getDepartment(), new DepartmentPrivateState());
             }
 
         }
@@ -91,7 +92,24 @@ public class Simulator {
 
         start();
 
-        end();
+        HashMap<String, PrivateState> simResult;
+        simResult = end();
+        FileOutputStream fout = new FileOutputStream("result.ser");
+        ObjectOutputStream oos = null;
+
+
+        try {
+            oos = new ObjectOutputStream(fout);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+        try {
+            oos.writeObject(simResult);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         //TODO do not forget warehouse and computer
         return 1;
