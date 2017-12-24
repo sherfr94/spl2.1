@@ -7,12 +7,16 @@ package bgu.spl.a2.sim;
 
 import bgu.spl.a2.ActorThreadPool;
 import bgu.spl.a2.PrivateState;
+import bgu.spl.a2.sim.actions.OpenNewCourse;
+import bgu.spl.a2.sim.privateStates.DepartmentPrivateState;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
+import json.ActionConfig;
 import json.Config;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -20,6 +24,11 @@ import java.util.HashMap;
  */
 public class Simulator {
 
+    private static Config config;
+
+    public static void setConfig(Config config) {
+        Simulator.config = config;
+    }
 
     public static ActorThreadPool actorThreadPool;
 
@@ -27,9 +36,21 @@ public class Simulator {
      * Begin the simulation Should not be called before attachActorThreadPool()
      */
     public static void start() {
-        //parse json
 
-        //submit actions to thread pool
+        ArrayList<ActionConfig> phase1Actions = config.getPhase1();
+
+        for (ActionConfig ac : phase1Actions) {
+            String actionName = ac.getAction();
+            if (actionName.equals("Open Course")) {
+                OpenNewCourse openNewCourse = new OpenNewCourse(ac.getCourse(), ac.getNumber(), ac.getPrerequisites());
+                actorThreadPool.submit(openNewCourse, ac.getDepartment(), new DepartmentPrivateState());
+            } else if (actionName.equals("Add Student")) {
+
+            }
+
+        }
+
+        actorThreadPool.start();
     }
 
     /**
@@ -38,8 +59,7 @@ public class Simulator {
      * @param myActorThreadPool - the ActorThreadPool which will be used by the simulator
      */
     public static void attachActorThreadPool(ActorThreadPool myActorThreadPool) {
-        //TODO: replace method body with real implementation
-        throw new UnsupportedOperationException("Not Implemented Yet.");
+        actorThreadPool = myActorThreadPool;
     }
 
     /**
@@ -47,31 +67,33 @@ public class Simulator {
      * returns list of private states
      */
     public static HashMap<String, PrivateState> end() {
-        //TODO: replace method body with real implementation
-        throw new UnsupportedOperationException("Not Implemented Yet.");
+        try {
+            actorThreadPool.shutdown();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return actorThreadPool.getPrivateStateMap();
     }
 
 
     public static int main(String[] args) throws FileNotFoundException {
         System.out.println("SIMULATOR RUNNING");
-
         String fileName = args[0];
 
         Gson gson = new Gson();
         JsonReader reader = new JsonReader(new FileReader(fileName));
+
         Config config = gson.fromJson(reader, Config.class);
+        Simulator.setConfig(config);
 
-        System.out.println(config.getThreads());
+        ActorThreadPool pool = new ActorThreadPool(config.getThreads());
+        Simulator.attachActorThreadPool(pool);
 
-        System.out.println(config.getComputers().get(0).getType());
+        start();
 
-        System.out.println(config.getPhase1().get(0).getAction());
+        end();
 
-        System.out.println(config.getPhase2().get(1).getAction());
-
-        System.out.println(config.getPhase3().get(0).getStudent());
-
-
+        //TODO do not forget warehouse and computer
         return 1;
 
     }

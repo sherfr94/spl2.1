@@ -98,7 +98,7 @@ public class ActorThreadPool {
      *
      * @return actionMap
      */
-    public Map<String, Queue<Action<?>>> getActionsMap() {
+    public HashMap<String, Queue<Action<?>>> getActionsMap() {
         return actionMap;
     }
 
@@ -108,7 +108,7 @@ public class ActorThreadPool {
      *
      * @return actors
      */
-    public Map<String, PrivateState> getPrivateStateMap() {
+    public HashMap<String, PrivateState> getPrivateStateMap() {
         return privateStateMap;
     }
 
@@ -135,8 +135,7 @@ public class ActorThreadPool {
         //check if id exists
         if (actionMap.containsKey(actorId)) {
             actionMap.get(actorId).add(action);
-            //privateStateMap.remove(actorId);//TODO privatestate remove and put
-            //privateStateMap.put(actorId,actorState);
+
         }
 
         //new id
