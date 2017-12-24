@@ -20,6 +20,7 @@ public class ActorThreadPool {
     private HashMap<String, PrivateState> privateStateMap;
     private HashMap<String, AtomicBoolean> isTaken;
     private VersionMonitor vm;
+    private boolean shutdown;
 
 
     /**
@@ -40,12 +41,13 @@ public class ActorThreadPool {
         privateStateMap = new HashMap<>();
         isTaken = new HashMap<>();
         vm = new VersionMonitor();
+        boolean shutdown = false;
 
 
         for (int i = 0; i < nthreads; i++) {
             threads.add(new Thread(() -> {
                 try {
-                    while (!Thread.interrupted()) {
+                    while (!shutdown) {
                         boolean foundAction = findAndExecute();
 
                         if (!foundAction) {
@@ -159,6 +161,7 @@ public class ActorThreadPool {
      * @throws InterruptedException if the thread that shut down the threads is interrupted
      */
     public void shutdown() throws InterruptedException {
+        this.shutdown = true;
         for (Thread thread : threads) {
             thread.interrupt();
         }

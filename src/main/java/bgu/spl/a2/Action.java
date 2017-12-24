@@ -78,7 +78,6 @@ public abstract class Action<R> {
      * @param callback the callback to execute once all the results are resolved
      */
     protected final void then(Collection<? extends Action<?>> actions, callback callback) {
-
         this.callback = callback;
         CountDownLatch countRemainingActions = new CountDownLatch(actions.size());
 

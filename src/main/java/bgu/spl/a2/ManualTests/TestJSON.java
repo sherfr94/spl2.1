@@ -1,17 +1,30 @@
 package bgu.spl.a2.ManualTests;
 
-import com.google.gson.Gson;
-
-import java.util.Arrays;
+import bgu.spl.a2.ActorThreadPool;
+import bgu.spl.a2.sim.actions.AddStudent;
+import bgu.spl.a2.sim.actions.OpenNewCourse;
+import bgu.spl.a2.sim.privateStates.DepartmentPrivateState;
 
 public class TestJSON {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
 
-        Gson gson = new Gson();
+        ActorThreadPool pool = new ActorThreadPool(8);
 
-        String json = Arrays.toString(args);
+        OpenNewCourse openNewCourse = new OpenNewCourse("Intro to CS", 30, null);
+        AddStudent addStudent = new AddStudent(123456789);
+        pool.start();
 
-        System.out.println(args[0]);
+
+        pool.submit(openNewCourse, "CS Department", new DepartmentPrivateState());
+        pool.submit(addStudent, "CS Department", new DepartmentPrivateState());
+
+
+        pool.shutdown();
+
+        Thread.sleep(300);
+
+        System.out.println(((DepartmentPrivateState) (pool.getPrivateStateMap().get("CS Department"))).getCourseList().get(0));
+        System.out.println(((DepartmentPrivateState) (pool.getPrivateStateMap().get("CS Department"))).getStudentList().get(0));
 
 
     }

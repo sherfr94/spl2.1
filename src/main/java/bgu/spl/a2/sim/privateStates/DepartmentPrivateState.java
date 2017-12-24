@@ -32,4 +32,12 @@ public class DepartmentPrivateState extends PrivateState {
         return studentList;
     }
 
+    public void addStudent(String studentID) {
+        this.studentList.add(studentID);
+    }
+
+    public void addCourse(String courseName) {
+        this.courseList.add(courseName);
+    }
+
 }

@@ -3,6 +3,9 @@ package bgu.spl.a2.sim.actions;
 import bgu.spl.a2.Action;
 import bgu.spl.a2.sim.privateStates.DepartmentPrivateState;
 import bgu.spl.a2.sim.privateStates.StudentPrivateState;
+import bgu.spl.a2.sim.subActions.SubAddStudent;
+
+import java.util.ArrayList;
 
 public class AddStudent extends Action<String> {
 
@@ -15,21 +18,24 @@ public class AddStudent extends Action<String> {
 
     @Override
     protected void start() {
-        System.out.println("Starting AddStudent");
         String studentID = String.valueOf(signature);
 
-        if (getPrivateState() instanceof DepartmentPrivateState) {
-            (((DepartmentPrivateState) getPrivateState()).getStudentList()).add(studentID);
-        }
+        SubAddStudent subAddStudent = new SubAddStudent(signature);
+        ArrayList<Action<?>> actions = new ArrayList<>();
 
-        StudentPrivateState privateState = new StudentPrivateState();
-        privateState.setSignature(signature);
+        actions.add(subAddStudent);
+        sendMessage(subAddStudent, studentID, new StudentPrivateState());
 
-        getPool().addActor(studentID, privateState);
+        then(actions, () -> {
 
-        //complete
-        complete("Added student: " + studentID + " ");
-        System.out.println(getResult().get());
+            if (getPrivateState() instanceof DepartmentPrivateState) {
+                ((DepartmentPrivateState) getPrivateState()).addStudent(studentID);
+            }
+
+            complete("Added student: " + studentID + " ");
+            System.out.println(getResult().get());
+
+        });
 
 
     }
