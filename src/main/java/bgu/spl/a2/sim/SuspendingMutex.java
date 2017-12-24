@@ -3,6 +3,7 @@ package bgu.spl.a2.sim;
 import bgu.spl.a2.Promise;
 
 import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * this class is related to {@link Computer}
@@ -25,6 +26,8 @@ public class SuspendingMutex {
     public SuspendingMutex(Computer computer) {
         this.isFree = true;
         this.computer = computer;
+        promiseQueue = new ConcurrentLinkedQueue<>();
+
     }
 
     /**
@@ -35,14 +38,16 @@ public class SuspendingMutex {
      */
     public Promise<Computer> down() {
 
-        if (!this.isFree) {
+        if (this.isFree) {
             this.isFree = false;
 
         } else {
             Promise<Computer> promise = new Promise<>();
+
             promise.subscribe(() -> {
                 down();
             });
+            promiseQueue.add(promise);
             return promise;
 
         }
@@ -55,7 +60,12 @@ public class SuspendingMutex {
      */
     public void up() {
         this.isFree = true;
-        promiseQueue.poll().resolve(computer);
+        if (!promiseQueue.isEmpty())
+            promiseQueue.poll().resolve(computer);//TODO: BUG: nullpointer
 
+    }
+
+    public Computer getComputer() {
+        return computer;
     }
 }

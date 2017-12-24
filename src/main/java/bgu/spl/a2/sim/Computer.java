@@ -9,6 +9,26 @@ public class Computer {
     long failSig;
     long successSig;
 
+    public void setComputerType(String computerType) {
+        this.computerType = computerType;
+    }
+
+    public long getFailSig() {
+        return failSig;
+    }
+
+    public void setFailSig(long failSig) {
+        this.failSig = failSig;
+    }
+
+    public long getSuccessSig() {
+        return successSig;
+    }
+
+    public void setSuccessSig(long successSig) {
+        this.successSig = successSig;
+    }
+
     public Computer(String computerType) {
         this.computerType = computerType;
     }
@@ -22,7 +42,8 @@ public class Computer {
      */
     public long checkAndSign(List<String> courses, Map<String, Integer> coursesGrades) {
         for (String name : courses) {//TODO is >=56 or just >56 to pass
-            if (coursesGrades.get(name) < 56) return failSig;
+            if (coursesGrades.get(name) == null) return failSig;
+            if (coursesGrades.get(name) < 56) return failSig;//TODO: BUG nullpointer
         }
         return successSig;
     }

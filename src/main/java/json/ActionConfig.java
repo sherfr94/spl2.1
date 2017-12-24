@@ -51,6 +51,17 @@ public class ActionConfig {
     @Expose
     private ArrayList<String> preferences;
 
+    @SerializedName("Students")
+    @Expose
+    private ArrayList<String> students;
+
+    public ArrayList<String> getStudents() {
+        return students;
+    }
+
+    public void setStudents(ArrayList<String> students) {
+        this.students = students;
+    }
 
     public String getAction() {
         return action;

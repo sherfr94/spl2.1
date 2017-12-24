@@ -9,15 +9,13 @@ import bgu.spl.a2.Action;
 import bgu.spl.a2.ActorThreadPool;
 import bgu.spl.a2.PrivateState;
 import bgu.spl.a2.Promise;
-import bgu.spl.a2.sim.actions.AddStudent;
-import bgu.spl.a2.sim.actions.OpenNewCourse;
-import bgu.spl.a2.sim.actions.ParticipatingInCourse;
-import bgu.spl.a2.sim.actions.Unregister;
+import bgu.spl.a2.sim.actions.*;
 import bgu.spl.a2.sim.privateStates.CoursePrivateState;
 import bgu.spl.a2.sim.privateStates.DepartmentPrivateState;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
 import json.ActionConfig;
+import json.ComputerConfig;
 import json.Config;
 
 import java.io.*;
@@ -43,6 +41,16 @@ public class Simulator {
      * Begin the simulation Should not be called before attachActorThreadPool()
      */
     public static void start() {
+
+        Warehouse warehouse = Warehouse.getInstance();
+        ArrayList<ComputerConfig> computers = config.getComputers();
+        for (ComputerConfig cc : computers) {
+            Computer computer = new Computer(cc.getType());
+            computer.setFailSig(cc.getFailSig());
+            computer.setSuccessSig(cc.getSuccessSig());
+            Warehouse.addCmputer(computer);
+        }
+
 
 
         //Phase1
@@ -134,7 +142,24 @@ public class Simulator {
             action = new Unregister(ac.getStudent());
             actorThreadPool.submit(action, ac.getCourse(), new CoursePrivateState());
             actorThreadPool.getPrivateState(ac.getCourse()).addRecord(actionName);
+        } else if (actionName.equals("Close A Course")) {//TODO how to write close a course
+            action = new CloseACourse(ac.getCourse());
+            actorThreadPool.submit(action, ac.getDepartment(), new DepartmentPrivateState());
+            actorThreadPool.getPrivateState(ac.getDepartment()).addRecord(actionName);
+        } else if (actionName.equals("Add Spaces")) {
+            action = new OpeningNewPlaceInACourse(ac.getNumber());
+            actorThreadPool.submit(action, ac.getCourse(), new CoursePrivateState());
+            actorThreadPool.getPrivateState(ac.getCourse()).addRecord(actionName);
+        } else if (actionName.equals("Administrative Check")) {
+            action = new AdministrativeCheck(ac.getStudents(), ac.getConditions(), Warehouse.getMutex(ac.getComputer()));
+            actorThreadPool.submit(action, ac.getDepartment(), new DepartmentPrivateState());
+            actorThreadPool.getPrivateState(ac.getDepartment()).addRecord(actionName);
+        } else if (actionName.equals("End Registration")) {
+            action = new EndRegistration();
+            actorThreadPool.submit(action, ac.getDepartment(), new DepartmentPrivateState());
+            actorThreadPool.getPrivateState(ac.getDepartment()).addRecord(actionName);
         }
+
 
         if (action != null) {
             Promise<String> promise = action.getResult();
@@ -148,6 +173,8 @@ public class Simulator {
 
 
     public static int main(String[] args) throws FileNotFoundException {
+        //for(int i=0;i<100;i++){
+        //System.out.println("SIMULATOR RUNNING #" + i);
         System.out.println("SIMULATOR RUNNING");
         String fileName = args[0];
 
@@ -180,6 +207,8 @@ public class Simulator {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        //}
+
 
         //TODO do not forget warehouse and computer
         return 1;

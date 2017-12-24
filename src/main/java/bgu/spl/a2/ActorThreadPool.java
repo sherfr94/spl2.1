@@ -79,7 +79,7 @@ public class ActorThreadPool {
 
                         foundAction = true;
                         Action<?> currAction = actorQueue.poll();
-                        currAction.handle(ActorThreadPool.this, actorID, privateStateMap.get(actorID));
+                        currAction.handle(ActorThreadPool.this, actorID, privateStateMap.get(actorID));//TODO BUG: nullpointerexception
 
 
                         isTaken.get(actorID).compareAndSet(true, false);

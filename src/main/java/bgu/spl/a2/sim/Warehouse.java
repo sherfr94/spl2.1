@@ -1,6 +1,5 @@
 package bgu.spl.a2.sim;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -9,14 +8,33 @@ import java.util.HashMap;
  * releasing and acquiring should be blocking free.
  */
 public class Warehouse {
-    //finite amount of computers
-    private ArrayList<Computer> computerList;//TODO do we need to set MAX_SIZE of computer array
 
-    //each compute has suspending mutex
-    private HashMap<Computer, SuspendingMutex> computerSuspendingMutexMap;
+    private static HashMap<String, SuspendingMutex> warehouse;
 
-    //mutexes
-    private ArrayList<SuspendingMutex> suspendingMutexArray;//TODO forum
+    private static Warehouse instance = null;
+
+    private Warehouse() {
+        warehouse = new HashMap<>();
+    }
+
+    public static Warehouse getInstance() {
+        if (instance == null) {
+
+            instance = new Warehouse();
+        }
+        return instance;
+    }
+
+    public static void addCmputer(Computer computer) {
+        SuspendingMutex suspendingMutex = new SuspendingMutex(computer);
+        warehouse.put(computer.getComputerType(), suspendingMutex);
+    }
+
+    public static SuspendingMutex getMutex(String computerType) {
+        return warehouse.get(computerType);
+    }
+
+
 
 
 }

@@ -15,6 +15,7 @@ public class TestJSON {
         OpenNewCourse openNewCourse = new OpenNewCourse("Intro to CS", 30, null);
         AddStudent addStudent = new AddStudent("123456789");
         ParticipatingInCourse participatingInCourse = new ParticipatingInCourse("123456789", "100");
+
         pool.start();
 
 

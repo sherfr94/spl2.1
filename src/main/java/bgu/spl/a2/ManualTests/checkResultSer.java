@@ -78,7 +78,7 @@ public class checkResultSer {
                 System.out.println(logger);
 
                 System.out.println("\"availableSpots\": \"" + ((CoursePrivateState) res.get(course)).getAvailableSpots().toString() + "\",");
-                //System.out.println("\"registered\": \"" + ((CoursePrivateState) res.get(course)).getRegistered().toString() + "\",");
+                System.out.println("\"registered\": \"" + ((CoursePrivateState) res.get(course)).getRegistered().toString() + "\",");
 
                 String studentList = "\"regStudents\" : [";
                 for (String student : ((CoursePrivateState) res.get(course)).getRegStudents())
@@ -113,8 +113,8 @@ public class checkResultSer {
 
                 String gradesList = "\"grades\" : [ ";
                 for (String course : ((StudentPrivateState) res.get(student)).getGrades().keySet())
-                    //	gradesList += "\"(" + course + "," + ((StudentPrivateState)res.get(student)).getGrade(course) + ")" +"\", ";
-                    //TODO remove comment
+                    gradesList += "\"(" + course + ", " + ((StudentPrivateState) res.get(student)).getGrades().get(course) + ")" + "\", ";
+
                     gradesList = gradesList.substring(0, Math.max(0, gradesList.length() - 1));
                 gradesList += "],";
                 System.out.println(gradesList);
