@@ -78,6 +78,7 @@ public class ActorThreadPool {
 
                 if (!actorQueue.isEmpty()) {
 
+
                     if (isTaken.isEmpty()) {
                         return false;//TODO nullpointer ex if not
                     }

@@ -15,7 +15,6 @@ public class SubCloseACourse extends Action<Boolean> {
         CoursePrivateState privateState = ((CoursePrivateState) getPrivateState());
 
         if (privateState.getRegistered() != 0) {
-            System.out.println("if#########");
 
             ArrayList<Action<?>> actions = new ArrayList<>();
 
@@ -34,7 +33,6 @@ public class SubCloseACourse extends Action<Boolean> {
 
 
         } else {
-            System.out.println("else#########");
             privateState.setAvailableSpots(-1);
             complete(true);
         }

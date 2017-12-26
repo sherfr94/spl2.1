@@ -28,7 +28,7 @@ public class Promise<T> {
      * @throws IllegalStateException in the case where this method is called and this object is
      *                               not yet resolved
      */
-    public T get() {
+    synchronized public T get() {
         return value;
     }
 

@@ -174,6 +174,9 @@ public class Simulator {
             actorThreadPool.getPrivateState(ac.getCourse()).addRecord(actionName);
         } else if (actionName.equals("Close Course")) {//TODO how to write close a course
             action = new CloseACourse(ac.getCourse());
+            action.getResult().subscribe(() -> {
+                latch.countDown();
+            });
             actorThreadPool.submit(action, ac.getDepartment(), new DepartmentPrivateState());
             actorThreadPool.getPrivateState(ac.getDepartment()).addRecord(actionName);
         } else if (actionName.equals("Add Spaces")) {

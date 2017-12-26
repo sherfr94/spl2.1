@@ -6,8 +6,6 @@ import bgu.spl.a2.sim.privateStates.CoursePrivateState;
 import bgu.spl.a2.sim.privateStates.StudentPrivateState;
 import bgu.spl.a2.sim.subActions.SubParticipatingInCourse;
 
-import java.util.ArrayList;
-
 public class ParticipatingInCourse extends Action<String> {
 
     private String studentID;
@@ -51,6 +49,7 @@ public class ParticipatingInCourse extends Action<String> {
                         privateState.setAvailableSpots(privateState.getAvailableSpots() - 1);
                         privateState.setRegistered(privateState.getRegistered() + 1);
                         complete("Participating success: \tStudent: " + studentID + " registered to course: " + getActorId());
+                        System.out.println(privateState.getRegistered());
                         System.out.println(getResult().get());
                     }
                     //prerequisites not ok
