@@ -57,6 +57,7 @@ public class ActorThreadPool {
                     }//end while
                 } catch (InterruptedException e) {
                     // ignore
+                    e.printStackTrace();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -89,8 +90,8 @@ public class ActorThreadPool {
 
             }//end foreach
             return foundAction;
-        } catch (ConcurrentModificationException ignore) {
-
+        } catch (ConcurrentModificationException e) {
+            // e.printStackTrace();
         }
         return false;
 

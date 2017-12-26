@@ -18,6 +18,7 @@ public class CloseACourse extends Action<String> {
     @Override
     protected void start() {
 
+
         DepartmentPrivateState privateState = ((DepartmentPrivateState) getPrivateState());
         ArrayList<Action<?>> actions = new ArrayList<>();
 
@@ -31,7 +32,6 @@ public class CloseACourse extends Action<String> {
             complete("Close Course success: \tClosed course: " + courseName);
             System.out.println(getResult().get());
         });
-
 
 
     }

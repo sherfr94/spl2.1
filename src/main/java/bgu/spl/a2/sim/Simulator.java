@@ -165,7 +165,7 @@ public class Simulator {
             action = new Unregister(ac.getStudent());
             actorThreadPool.submit(action, ac.getCourse(), new CoursePrivateState());
             actorThreadPool.getPrivateState(ac.getCourse()).addRecord(actionName);
-        } else if (actionName.equals("Close A Course")) {//TODO how to write close a course
+        } else if (actionName.equals("Close Course")) {//TODO how to write close a course
             action = new CloseACourse(ac.getCourse());
             actorThreadPool.submit(action, ac.getDepartment(), new DepartmentPrivateState());
             actorThreadPool.getPrivateState(ac.getDepartment()).addRecord(actionName);
@@ -187,7 +187,7 @@ public class Simulator {
         if (action != null) {
             Promise<String> promise = action.getResult();
             promise.subscribe(() -> {
-                System.out.println("Latch: " + latch.getCount());
+                //System.out.println("Latch: " + latch.getCount());
                 latch.countDown();
             });
         }

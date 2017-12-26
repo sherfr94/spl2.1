@@ -11,23 +11,33 @@ public class SubCloseACourse extends Action<Boolean> {
     @Override
     protected void start() {
 
+
         CoursePrivateState privateState = ((CoursePrivateState) getPrivateState());
-        privateState.setAvailableSpots(-1);
 
-        ArrayList<Action<?>> actions = new ArrayList<>();
+        if (privateState.getRegistered() != 0) {
 
-        for (String s : privateState.getRegStudents()) {
-            Unregister unregister = new Unregister(s);
-            sendMessage(unregister, getActorId(), new CoursePrivateState());
-            actions.add(unregister);
+            ArrayList<Action<?>> actions = new ArrayList<>();
 
+            for (String s : privateState.getRegStudents()) {
+                Unregister unregister = new Unregister(s);
+                sendMessage(unregister, getActorId(), new CoursePrivateState());
+                actions.add(unregister);
+
+            }
+
+
+            then(actions, () -> {
+                privateState.setAvailableSpots(-1);
+                complete(true);
+            });
+
+
+        } else {
+            privateState.setAvailableSpots(-1);
+            complete(true);
         }
 
 
-        then(actions, () -> {
-            privateState.setAvailableSpots(-1);
-            complete(true);
-        });
 
 
     }

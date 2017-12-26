@@ -14,12 +14,12 @@ public class SubUnregister extends Action<Boolean> {
     @Override
     protected void start() {
 
+
         StudentPrivateState privateState = (StudentPrivateState) getPrivateState();
 
         if (privateState.getGrades().get(courseName) != null) {
             privateState.getGrades().remove(courseName);
             complete(true);
-            return;
         } else {
             complete(false);
         }
