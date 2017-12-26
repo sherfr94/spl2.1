@@ -28,6 +28,7 @@ public class CloseACourse extends Action<String> {
         sendMessage(subCloseACourse, courseName, new CoursePrivateState());
 
         then(actions, () -> {
+            System.out.println("######");
             privateState.getCourseList().remove(courseName);
             complete("Close Course success: \tClosed course: " + courseName);
             System.out.println(getResult().get());

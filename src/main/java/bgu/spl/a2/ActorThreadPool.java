@@ -78,9 +78,10 @@ public class ActorThreadPool {
 
                 if (!actorQueue.isEmpty()) {
 
-                    if (isTaken.isEmpty()) return false;//TODO nullpointer ex if not
+                    if (isTaken.isEmpty()) {
+                        return false;//TODO nullpointer ex if not
+                    }
                     if (isTaken.get(actorID).compareAndSet(false, true)) {
-
                         foundAction = true;
                         Action<?> currAction = actorQueue.poll();
                         if (currAction != null)
@@ -138,13 +139,11 @@ public class ActorThreadPool {
      * @param actorId    corresponding actor's id
      * @param actorState actor's private state (actor's information)
      */
-    public void submit(Action<?> action, String actorId, PrivateState actorState) {
+    public synchronized void submit(Action<?> action, String actorId, PrivateState actorState) {
         //check if id exists
         if (actionMap.containsKey(actorId)) {
             actionMap.get(actorId).add(action);
-
         }
-
         //new id
         else {
             Queue<Action<?>> newActor = new LinkedList<>();

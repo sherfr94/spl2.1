@@ -19,6 +19,7 @@ public class SubParticipatingInCourse extends Action<Boolean> {
 
     @Override
     protected void start() {
+       // System.out.println("XXX1" + getPool().getIsTaken().get(courseName));
         boolean problem = false;
         if (!(prerequisites.isEmpty())) {
             for (String course : prerequisites) {
@@ -30,8 +31,6 @@ public class SubParticipatingInCourse extends Action<Boolean> {
             }
 
         }
-
-
         if (problem) {
             complete(false);
             return;
@@ -49,7 +48,8 @@ public class SubParticipatingInCourse extends Action<Boolean> {
 
         }
 
-        System.out.println("XXX" + getPool().getIsTaken().get(courseName));
+
+     //   System.out.println("XXX2" + getPool().getIsTaken().get(getActorId()));
 
 
     }

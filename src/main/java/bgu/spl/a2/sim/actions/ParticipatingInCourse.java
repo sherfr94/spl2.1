@@ -30,16 +30,19 @@ public class ParticipatingInCourse extends Action<String> {
 
         //enough space
         else {
+           // System.out.println("YYY1"+getPool().getIsTaken().get(getActorId()));
 
                 SubParticipatingInCourse subParticipatingInCourse = new SubParticipatingInCourse(grade, getActorId(), privateState.getPrequisites());
 
-                ArrayList<Action<?>> actions = new ArrayList<>();
+                //ArrayList<Action<?>> actions = new ArrayList<>();
 
-                actions.add(subParticipatingInCourse);
+                //actions.add(subParticipatingInCourse);
                 getPool().submit(subParticipatingInCourse, studentID, new StudentPrivateState());
                 Promise<Boolean> promise = subParticipatingInCourse.getResult();
 
                 promise.subscribe(() -> {
+                    //getPool().getIsTaken().get(getActorId()).compareAndSet(false,true);
+                   // System.out.println("YYY2"+getPool().getIsTaken().get(getActorId()));
                     Boolean result = subParticipatingInCourse.getResult().get();
                     //prerequisits ok
                     if (result) {//TODO: BUG: nullPointerExeption

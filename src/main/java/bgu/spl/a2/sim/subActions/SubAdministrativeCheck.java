@@ -26,12 +26,15 @@ public class SubAdministrativeCheck extends Action<Boolean> {
 
         Promise<Computer> promise = mutex.down();
         if (promise == null) {
+            System.out.println("#########1");
             long sig = mutex.getComputer().checkAndSign(courses, privateState.getGrades());
             privateState.setSignature(sig);
             mutex.up();
             complete(true);
         } else {
+            System.out.println("#########2");
             promise.subscribe(() -> {
+                System.out.println("#########3");
                 long sig = mutex.getComputer().checkAndSign(courses, privateState.getGrades());
                 privateState.setSignature(sig);
                 mutex.up();
