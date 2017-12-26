@@ -9,7 +9,7 @@ public class ActionConfig {
 
     @SerializedName("Action")
     @Expose
-    private String action;//TODO maybe init to null???
+    private String action;
 
     @SerializedName("Department")
     @Expose
@@ -29,7 +29,7 @@ public class ActionConfig {
 
     @SerializedName("Prerequisites")
     @Expose
-    private ArrayList<String> prerequisites;//TODO check if works with strings
+    private ArrayList<String> prerequisites;
 
     @SerializedName("Grade")
     @Expose

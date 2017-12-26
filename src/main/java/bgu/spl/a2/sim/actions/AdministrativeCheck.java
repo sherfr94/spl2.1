@@ -20,7 +20,7 @@ public class AdministrativeCheck extends Action<String> {
     }
 
     @Override
-    protected void start() {//TODO IMPLEMENT ACTION
+    protected void start() {
 
 
         ArrayList<Action<?>> actions = new ArrayList<>();

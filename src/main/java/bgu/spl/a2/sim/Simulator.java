@@ -8,7 +8,6 @@ package bgu.spl.a2.sim;
 import bgu.spl.a2.Action;
 import bgu.spl.a2.ActorThreadPool;
 import bgu.spl.a2.PrivateState;
-import bgu.spl.a2.Promise;
 import bgu.spl.a2.sim.actions.*;
 import bgu.spl.a2.sim.privateStates.CoursePrivateState;
 import bgu.spl.a2.sim.privateStates.DepartmentPrivateState;
@@ -31,7 +30,7 @@ public class Simulator {
 
     private static Config config;
     private static CountDownLatch latch;
-    private static int i = 1;
+    //private static int i = 1;
     private static Object lock;
 
     public static void setConfig(Config config) {
@@ -55,7 +54,7 @@ public class Simulator {
         }
 
         System.out.println("=========");
-        System.out.println("PHASE" + i);
+        System.out.println("PHASE1");
         System.out.println("=========");
 
         //Phase1
@@ -75,17 +74,12 @@ public class Simulator {
             e.printStackTrace();
         }
 
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
 
 
         if (latch.getCount() == 0) {
-            i++;
+
             System.out.println("=========");
-            System.out.println("PHASE" + i);
+            System.out.println("PHASE2");
             System.out.println("=========");
         }
 
@@ -106,9 +100,9 @@ public class Simulator {
 
 
         if (latch.getCount() == 0) {
-            i++;
+
             System.out.println("=========");
-            System.out.println("PHASE" + i);
+            System.out.println("PHASE3");
             System.out.println("=========");
         }
 
@@ -151,18 +145,31 @@ public class Simulator {
 
         if (actionName.equals("Open Course")) {
             action = new OpenNewCourse(ac.getCourse(), ac.getSpace(), ac.getPrerequisites());
+            action.getResult().subscribe(() -> {
+                latch.countDown();
+
+            });
             actorThreadPool.submit(action, ac.getDepartment(), new DepartmentPrivateState());
             actorThreadPool.getPrivateState(ac.getDepartment()).addRecord(actionName);
         } else if (actionName.equals("Add Student")) {
             action = new AddStudent(ac.getStudent());
+            action.getResult().subscribe(() -> {
+                latch.countDown();
+            });
             actorThreadPool.submit(action, ac.getDepartment(), new DepartmentPrivateState());
             actorThreadPool.getPrivateState(ac.getDepartment()).addRecord(actionName);
         } else if (actionName.equals("Participate In Course")) {
             action = new ParticipatingInCourse(ac.getStudent(), ac.getGrade().get(0));
+            action.getResult().subscribe(() -> {
+                latch.countDown();
+            });
             actorThreadPool.submit(action, ac.getCourse(), new CoursePrivateState());
             actorThreadPool.getPrivateState(ac.getCourse()).addRecord(actionName);
         } else if (actionName.equals("Unregister")) {
             action = new Unregister(ac.getStudent());
+            action.getResult().subscribe(() -> {
+                latch.countDown();
+            });
             actorThreadPool.submit(action, ac.getCourse(), new CoursePrivateState());
             actorThreadPool.getPrivateState(ac.getCourse()).addRecord(actionName);
         } else if (actionName.equals("Close Course")) {//TODO how to write close a course
@@ -171,26 +178,35 @@ public class Simulator {
             actorThreadPool.getPrivateState(ac.getDepartment()).addRecord(actionName);
         } else if (actionName.equals("Add Spaces")) {
             action = new OpeningNewPlaceInACourse(ac.getNumber());
+            action.getResult().subscribe(() -> {
+                latch.countDown();
+            });
             actorThreadPool.submit(action, ac.getCourse(), new CoursePrivateState());
             actorThreadPool.getPrivateState(ac.getCourse()).addRecord(actionName);
         } else if (actionName.equals("Administrative Check")) {
             action = new AdministrativeCheck(ac.getStudents(), ac.getConditions(), Warehouse.getMutex(ac.getComputer()));
+            action.getResult().subscribe(() -> {
+                latch.countDown();
+            });
             actorThreadPool.submit(action, ac.getDepartment(), new DepartmentPrivateState());
             actorThreadPool.getPrivateState(ac.getDepartment()).addRecord(actionName);
         } else if (actionName.equals("Register With Preferences")) {//TODO complete params
             action = new RegisterWithPreferences(ac.getPreferences(), ac.getGrade());
+            action.getResult().subscribe(() -> {
+                latch.countDown();
+            });
             actorThreadPool.submit(action, ac.getStudent(), new StudentPrivateState());
             actorThreadPool.getPrivateState(ac.getStudent()).addRecord(actionName);
         }
 
 
-        if (action != null) {
-            Promise<String> promise = action.getResult();
-            promise.subscribe(() -> {
-                //System.out.println("Latch: " + latch.getCount());
-                latch.countDown();
-            });
-        }
+//        if (action != null) {
+//            Promise<String> promise = action.getResult();
+//            promise.subscribe(() -> {
+//                System.out.println("Latch: " + latch.getCount()+" "+actionName);
+//                latch.countDown();
+//            });
+//        }
 
 
     }

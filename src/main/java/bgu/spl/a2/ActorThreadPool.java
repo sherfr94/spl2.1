@@ -57,8 +57,9 @@ public class ActorThreadPool {
                     }//end while
                 } catch (InterruptedException e) {
                     // ignore
-                    e.printStackTrace();
+                    //e.printStackTrace();
                 } catch (Exception e) {
+                    System.out.println("#null");
                     e.printStackTrace();
                 }
 
@@ -66,9 +67,10 @@ public class ActorThreadPool {
         }
     }
 
-    public synchronized boolean findAndExecute() {//TODO consider moving syncronized to less code
+    public synchronized boolean findAndExecute() {
         try {
             boolean foundAction = false;
+            if (actionMap.isEmpty()) return false;
             for (Map.Entry<String, Queue<Action<?>>> entry : actionMap.entrySet()) {
 
                 Queue<Action<?>> actorQueue = entry.getValue();
@@ -76,6 +78,7 @@ public class ActorThreadPool {
 
                 if (!actorQueue.isEmpty()) {
 
+                    if (isTaken.isEmpty()) return false;//TODO nullpointer ex if not
                     if (isTaken.get(actorID).compareAndSet(false, true)) {
 
                         foundAction = true;
@@ -190,12 +193,7 @@ public class ActorThreadPool {
         return isTaken;
     }
 
-    public synchronized void addActor(String id, PrivateState privateState) {
 
-        this.actionMap.put(id, new PriorityQueue<>());
-        this.privateStateMap.put(id, privateState);
-        this.isTaken.put(id, new AtomicBoolean(false));
-    }
 
 
 }

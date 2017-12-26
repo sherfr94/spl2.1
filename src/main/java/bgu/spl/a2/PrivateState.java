@@ -16,7 +16,7 @@ public abstract class PrivateState implements Serializable {//TODO can we add se
 
     // holds the actions' name what were executed
     private List<String> history = new LinkedList<>();
-    //TODO can we add constructor?
+
 
     public List<String> getLogger() {
         return history;

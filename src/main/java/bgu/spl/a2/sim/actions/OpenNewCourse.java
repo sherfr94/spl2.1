@@ -17,7 +17,7 @@ public class OpenNewCourse extends Action<String> {
         setActionName("Open Course");
         this.courseName = courseName;
         this.numOfSpaces = numOfSpaces;
-        this.prerequisites = prequisites;//TODO how to get list of prequisites and update
+        this.prerequisites = prequisites;
 
     }
 

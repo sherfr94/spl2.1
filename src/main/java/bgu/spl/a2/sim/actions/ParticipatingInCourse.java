@@ -28,19 +28,10 @@ public class ParticipatingInCourse extends Action<String> {
             System.out.println(getResult().get());
         }
 
-
         //enough space
         else {
 
-            if (((CoursePrivateState) getPrivateState()).getPrequisites() == null || ((CoursePrivateState) getPrivateState()).getPrequisites().size() == 0) {
-                privateState.getRegStudents().add(studentID);
-                privateState.setAvailableSpots(privateState.getAvailableSpots() - 1);
-                privateState.setRegistered(privateState.getRegistered() + 1);
-                complete("Participating success: \tStudent: " + studentID + " registered to course: " + getActorId());
-                System.out.println(getResult().get());
-            } else {
                 SubParticipatingInCourse subParticipatingInCourse = new SubParticipatingInCourse(grade, getActorId(), privateState.getPrequisites());
-
 
                 ArrayList<Action<?>> actions = new ArrayList<>();
 
@@ -66,11 +57,8 @@ public class ParticipatingInCourse extends Action<String> {
                     }
                 });
 
-
             }
         }
-
-    }
 
 
 }
