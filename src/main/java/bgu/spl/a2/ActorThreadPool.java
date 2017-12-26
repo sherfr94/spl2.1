@@ -1,6 +1,7 @@
 package bgu.spl.a2;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -16,7 +17,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class ActorThreadPool {
 
     private ArrayList<Thread> threads;
-    private HashMap<String, Queue<Action<?>>> actionMap;
+    private HashMap<String, ConcurrentLinkedQueue<Action<?>>> actionMap;
     private HashMap<String, PrivateState> privateStateMap;
     private HashMap<String, AtomicBoolean> isTaken;
     private VersionMonitor vm;
@@ -71,7 +72,7 @@ public class ActorThreadPool {
         try {
             boolean foundAction = false;
             if (actionMap.isEmpty()) return false;
-            for (Map.Entry<String, Queue<Action<?>>> entry : actionMap.entrySet()) {
+            for (Map.Entry<String, ConcurrentLinkedQueue<Action<?>>> entry : actionMap.entrySet()) {
 
                 Queue<Action<?>> actorQueue = entry.getValue();
                 String actorID = entry.getKey();
@@ -82,6 +83,7 @@ public class ActorThreadPool {
                     if (isTaken.isEmpty()) {
                         return false;//TODO nullpointer ex if not
                     }
+
                     if (isTaken.get(actorID).compareAndSet(false, true)) {
                         foundAction = true;
                         Action<?> currAction = actorQueue.poll();
@@ -107,7 +109,7 @@ public class ActorThreadPool {
      *
      * @return actionMap
      */
-    public HashMap<String, Queue<Action<?>>> getActionsMap() {
+    public HashMap<String, ConcurrentLinkedQueue<Action<?>>> getActionsMap() {
         return actionMap;
     }
 
@@ -147,7 +149,7 @@ public class ActorThreadPool {
         }
         //new id
         else {
-            Queue<Action<?>> newActor = new LinkedList<>();
+            ConcurrentLinkedQueue<Action<?>> newActor = new ConcurrentLinkedQueue<>();
             newActor.add(action);
             actionMap.put(actorId, newActor);
             privateStateMap.put(actorId, actorState);

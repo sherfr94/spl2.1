@@ -1,6 +1,7 @@
 package bgu.spl.a2.sim.subActions;
 
 import bgu.spl.a2.Action;
+import bgu.spl.a2.sim.privateStates.CoursePrivateState;
 import bgu.spl.a2.sim.privateStates.StudentPrivateState;
 
 import java.util.List;
@@ -19,6 +20,12 @@ public class SubParticipatingInCourse extends Action<Boolean> {
 
     @Override
     protected void start() {
+
+        if (((CoursePrivateState) getPool().getPrivateState(courseName)).getAvailableSpots() <= 0) {
+            complete(false);
+
+            return;
+        }
        // System.out.println("XXX1" + getPool().getIsTaken().get(courseName));
         boolean problem = false;
         if (!(prerequisites.isEmpty())) {

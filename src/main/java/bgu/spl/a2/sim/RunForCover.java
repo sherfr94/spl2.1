@@ -6,7 +6,7 @@ public class RunForCover {
     public static void main(String[] args) throws FileNotFoundException, InterruptedException {
         for (int i = 0; i < 1000; i++) {
             System.out.println("******************" + i);
-            Simulator.main(new String[]{"myJson1.json"});
+            Simulator.main(new String[]{"pdf.json"});
             Thread.sleep(250);
         }
     }
