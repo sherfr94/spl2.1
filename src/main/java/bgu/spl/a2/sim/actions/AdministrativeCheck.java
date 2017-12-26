@@ -32,7 +32,7 @@ public class AdministrativeCheck extends Action<String> {
         }
 
         then(actions, () -> {
-            complete("Adimistrative Check: success");
+            complete("AdminCheck success:");
             System.out.println(getResult().get());
         });
 

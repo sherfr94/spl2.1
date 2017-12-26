@@ -38,7 +38,8 @@ public class OpenNewCourse extends Action<String> {
             }
 
             //complete
-            complete("Opened course: " + courseName);
+            CoursePrivateState sub = ((CoursePrivateState) (subOpenNewCourse.getPrivateState()));
+            complete("OpenNewCourse sucess: \tOpened course: " + courseName + " (" + sub.getAvailableSpots() + ")");
 
             System.out.println(getResult().get());
 

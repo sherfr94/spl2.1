@@ -53,9 +53,10 @@ public class TestVersionMonitor {
             t1.start();
 
             try {
-                assertEquals(t1.getState().toString(), "TERMINATED");
-                vm.inc();
                 assertEquals(t1.getState().toString(), "RUNNABLE");
+                vm.inc();
+                Thread.sleep(100);
+                assertEquals(t1.getState().toString(), "TERMINATED");
             } catch (Exception ex) {
                 fail();
             }

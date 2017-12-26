@@ -12,6 +12,7 @@ public class SubCloseACourse extends Action<Boolean> {
     protected void start() {
 
         CoursePrivateState privateState = ((CoursePrivateState) getPrivateState());
+        privateState.setAvailableSpots(-1);
 
         ArrayList<Action<?>> actions = new ArrayList<>();
 

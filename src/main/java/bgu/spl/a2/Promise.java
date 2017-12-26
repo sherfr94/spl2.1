@@ -54,6 +54,8 @@ public class Promise<T> {
      * @throws IllegalStateException in the case where this object is already resolved
      */
     public void resolve(T value) {
+        if (isResolved()) throw new IllegalStateException("Already resolved");
+
         this.value = value;
         this.isResolved = true;
 

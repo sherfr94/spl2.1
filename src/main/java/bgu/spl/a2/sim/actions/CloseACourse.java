@@ -28,7 +28,7 @@ public class CloseACourse extends Action<String> {
 
         then(actions, () -> {
             privateState.getCourseList().remove(courseName);
-            complete("Close Course succeeded: " + courseName);
+            complete("Close Course success: \tClosed course: " + courseName);
             System.out.println(getResult().get());
         });
 

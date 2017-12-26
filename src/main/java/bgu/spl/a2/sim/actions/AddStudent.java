@@ -32,7 +32,7 @@ public class AddStudent extends Action<String> {
                 ((DepartmentPrivateState) getPrivateState()).addStudent(studentID);
             }
 
-            complete("Added student: " + studentID + " ");
+            complete("AddStudent success: \tAdded student: " + studentID + " ");
             System.out.println(getResult().get());
 
         });

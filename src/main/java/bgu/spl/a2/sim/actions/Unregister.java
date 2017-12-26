@@ -34,10 +34,10 @@ public class Unregister extends Action<String> {
                 privateState.getRegStudents().remove(studentID);
                 privateState.setAvailableSpots(privateState.getAvailableSpots() + 1);
                 privateState.setRegistered(privateState.getRegistered() - 1);
-                complete("Unregister succeed: Student " + studentID + " unregistered from course: " + getActorId());
+                complete("Unregister success: \tStudent " + studentID + " unregistered from course: " + getActorId());
                 System.out.println(getResult().get());
             } else {
-                complete("Unregister failed: Student already isn't registered");
+                complete("Unregister fail: \tStudent wasn't registered");
                 System.out.println(getResult().get());
             }
         });

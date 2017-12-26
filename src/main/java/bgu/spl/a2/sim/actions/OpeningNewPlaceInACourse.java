@@ -17,7 +17,7 @@ public class OpeningNewPlaceInACourse extends Action<String> {
         CoursePrivateState privateState = ((CoursePrivateState) getPrivateState());
 
         privateState.setAvailableSpots(privateState.getAvailableSpots() + space);
-        complete("Add Spaces succeeded: " + getActorId() + " (+" + space + ")");
+        complete("AddSpaces success: \tAdded spaces to: " + getActorId() + " (+" + space + ")");
         System.out.println(getResult().get());
     }
 }

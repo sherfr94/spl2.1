@@ -12,6 +12,7 @@ import bgu.spl.a2.Promise;
 import bgu.spl.a2.sim.actions.*;
 import bgu.spl.a2.sim.privateStates.CoursePrivateState;
 import bgu.spl.a2.sim.privateStates.DepartmentPrivateState;
+import bgu.spl.a2.sim.privateStates.StudentPrivateState;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
 import json.ActionConfig;
@@ -51,11 +52,15 @@ public class Simulator {
             Warehouse.addCmputer(computer);
         }
 
-
+        System.out.println("=========");
+        System.out.println("PHASE1");
+        System.out.println("=========");
 
         //Phase1
         ArrayList<ActionConfig> phase1Actions = config.getPhase1();
         actorThreadPool.start();
+
+
         latch = new CountDownLatch(phase1Actions.size());
 
         for (ActionConfig ac : phase1Actions) {
@@ -67,6 +72,17 @@ public class Simulator {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+
+        System.out.println("=========");
+        System.out.println("PHASE2");
+        System.out.println("=========");
 
         //Phase2
         ArrayList<ActionConfig> phase2Actions = config.getPhase2();
@@ -81,6 +97,11 @@ public class Simulator {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
+        System.out.println("=========");
+
+        System.out.println("PHASE3");
+        System.out.println("=========");
 
         //Phase3
         ArrayList<ActionConfig> phase3Actions = config.getPhase3();
@@ -132,12 +153,9 @@ public class Simulator {
             actorThreadPool.submit(action, ac.getDepartment(), new DepartmentPrivateState());
             actorThreadPool.getPrivateState(ac.getDepartment()).addRecord(actionName);
         } else if (actionName.equals("Participate In Course")) {
-
             action = new ParticipatingInCourse(ac.getStudent(), ac.getGrade().get(0));
             actorThreadPool.submit(action, ac.getCourse(), new CoursePrivateState());
             actorThreadPool.getPrivateState(ac.getCourse()).addRecord(actionName);
-
-
         } else if (actionName.equals("Unregister")) {
             action = new Unregister(ac.getStudent());
             actorThreadPool.submit(action, ac.getCourse(), new CoursePrivateState());
@@ -154,6 +172,10 @@ public class Simulator {
             action = new AdministrativeCheck(ac.getStudents(), ac.getConditions(), Warehouse.getMutex(ac.getComputer()));
             actorThreadPool.submit(action, ac.getDepartment(), new DepartmentPrivateState());
             actorThreadPool.getPrivateState(ac.getDepartment()).addRecord(actionName);
+        } else if (actionName.equals("Register With Preferences")) {//TODO complete params
+            action = new RegisterWithPreferences(ac.getPreferences(), ac.getGrade());
+            actorThreadPool.submit(action, ac.getStudent(), new StudentPrivateState());
+            actorThreadPool.getPrivateState(ac.getStudent()).addRecord(actionName);
         }
 
 
@@ -169,9 +191,7 @@ public class Simulator {
 
 
     public static int main(String[] args) throws FileNotFoundException {
-        for (int i = 0; i < 100; i++) {
-            System.out.println("SIMULATOR RUNNING #" + i);
-            //System.out.println("SIMULATOR RUNNING");
+
         String fileName = args[0];
 
         Gson gson = new Gson();
@@ -202,7 +222,6 @@ public class Simulator {
             oos.writeObject(simResult);
         } catch (IOException e) {
             e.printStackTrace();
-        }
         }
 
 

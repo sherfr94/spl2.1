@@ -21,45 +21,61 @@ public class ParticipatingInCourse extends Action<String> {
     @Override
     protected void start() {
 
-        if (((CoursePrivateState) getPrivateState()).getAvailableSpots() == 0) {
-            complete("Participate failed: No space left");
+        CoursePrivateState privateState = ((CoursePrivateState) getPrivateState());
+
+        if (privateState.getAvailableSpots() == 0) {
+            complete("Participating fail: \tNo space left");
             System.out.println(getResult().get());
+            System.out.println("#####" + getActorId());
         }
 
 
         //enough space
         else {
-            CoursePrivateState privateState = ((CoursePrivateState) getPrivateState());
 
-            SubParticipatingInCourse subParticipatingInCourse = new SubParticipatingInCourse(grade, getActorId(), privateState.getPrequisites());
-            ArrayList<Action<?>> actions = new ArrayList<>();
-
-            actions.add(subParticipatingInCourse);
-            getPool().submit(subParticipatingInCourse, studentID, new StudentPrivateState());
-            Promise<Boolean> promise = subParticipatingInCourse.getResult();
-
-            promise.subscribe(() -> {
-                Boolean result = subParticipatingInCourse.getResult().get();
-                //prerequisits ok
-                if (result) {//TODO: BUG: nullPointerExeption
-
-                    privateState.getRegStudents().add(studentID);
-                    privateState.setAvailableSpots(privateState.getAvailableSpots() - 1);
-                    privateState.setRegistered(privateState.getRegistered() + 1);
-                    complete("Participate succeed: Student: " + studentID + " registered to course: " + getActorId());
-                    System.out.println(getResult().get());
-                }
-                //prerequisites not ok
-                else {
-                    complete("Participate failed: No prerequisites");
-                    System.out.println(getResult().get());
-                }
-            });
+            if (((CoursePrivateState) getPrivateState()).getPrequisites() == null || ((CoursePrivateState) getPrivateState()).getPrequisites().size() == 0) {
+                privateState.getRegStudents().add(studentID);
+                privateState.setAvailableSpots(privateState.getAvailableSpots() - 1);
+                privateState.setRegistered(privateState.getRegistered() + 1);
+                complete("Participating success: \tStudent: " + studentID + " registered to course: " + getActorId());
+                System.out.println(getResult().get());
+            } else {
+                SubParticipatingInCourse subParticipatingInCourse = new SubParticipatingInCourse(grade, getActorId(), privateState.getPrequisites());
 
 
+                ArrayList<Action<?>> actions = new ArrayList<>();
+
+                actions.add(subParticipatingInCourse);
+                getPool().submit(subParticipatingInCourse, studentID, new StudentPrivateState());
+                Promise<Boolean> promise = subParticipatingInCourse.getResult();
+
+                promise.subscribe(() -> {
+                    Boolean result = subParticipatingInCourse.getResult().get();
+                    //prerequisits ok
+                    if (result) {//TODO: BUG: nullPointerExeption
+
+                        privateState.getRegStudents().add(studentID);
+                        privateState.setAvailableSpots(privateState.getAvailableSpots() - 1);
+                        privateState.setRegistered(privateState.getRegistered() + 1);
+                        complete("Participating success: \tStudent: " + studentID + " registered to course: " + getActorId());
+                        System.out.println(getResult().get());
+                    }
+                    //prerequisites not ok
+                    else {
+                        complete("Participating fail: \tNo prerequisites");
+                        System.out.println(getResult().get());
+                    }
+                });
+
+
+            }
         }
+
     }
 
 
 }
+
+
+
 
