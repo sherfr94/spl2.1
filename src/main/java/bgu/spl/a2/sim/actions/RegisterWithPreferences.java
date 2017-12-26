@@ -39,9 +39,16 @@ public class RegisterWithPreferences extends Action<String> {
                     complete("Preferences success: \tStudent: " + getActorId());
                     System.out.println(getResult().get());
                 } else {
-                    complete("");
+
                     RegisterWithPreferences registerWithPreferences = new RegisterWithPreferences(courses, grades);
-                    getPool().submit(registerWithPreferences, getActorId(), new StudentPrivateState());
+                    ArrayList<Action<?>> actions2 = new ArrayList<>();
+                    actions2.add(registerWithPreferences);
+                    sendMessage(registerWithPreferences, getActorId(), new StudentPrivateState());
+
+                    then(actions2, () -> {
+                        complete("");
+                    });
+
 
                 }
             });

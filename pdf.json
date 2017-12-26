@@ -88,6 +88,11 @@
       "Course": "Data Bases"
     },
     {
+      "Action": "Close Course",
+      "Department": "CS",
+      "Course": "Data Bases"
+    },
+    {
       "Action": "Administrative Check",
       "Department": "CS",
       "Students": [

@@ -26,7 +26,6 @@ public class ParticipatingInCourse extends Action<String> {
         if (privateState.getAvailableSpots() == 0) {
             complete("Participating fail: \tNo space left");
             System.out.println(getResult().get());
-            System.out.println("#####" + getActorId());
         }
 
 

@@ -15,8 +15,8 @@ public class TestJSON {
 
         pool.start();
 
-        OpenNewCourse openNewCourse = new OpenNewCourse("Intro to CS", 30, null);
-        OpenNewCourse openNewCourse1 = new OpenNewCourse("SPL", 30, null);
+        OpenNewCourse openNewCourse = new OpenNewCourse("Intro to CS", 0, null);
+        OpenNewCourse openNewCourse1 = new OpenNewCourse("SPL", 0, null);
         AddStudent addStudent = new AddStudent("1");
         AddStudent addStudent1 = new AddStudent("2");
         AddStudent addStudent2 = new AddStudent("3");

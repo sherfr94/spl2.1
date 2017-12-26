@@ -31,6 +31,8 @@ public class Simulator {
 
     private static Config config;
     private static CountDownLatch latch;
+    private static int i = 1;
+    private static Object lock;
 
     public static void setConfig(Config config) {
         Simulator.config = config;
@@ -53,7 +55,7 @@ public class Simulator {
         }
 
         System.out.println("=========");
-        System.out.println("PHASE1");
+        System.out.println("PHASE" + i);
         System.out.println("=========");
 
         //Phase1
@@ -80,9 +82,13 @@ public class Simulator {
         }
 
 
-        System.out.println("=========");
-        System.out.println("PHASE2");
-        System.out.println("=========");
+        if (latch.getCount() == 0) {
+            i++;
+            System.out.println("=========");
+            System.out.println("PHASE" + i);
+            System.out.println("=========");
+        }
+
 
         //Phase2
         ArrayList<ActionConfig> phase2Actions = config.getPhase2();
@@ -98,10 +104,13 @@ public class Simulator {
             e.printStackTrace();
         }
 
-        System.out.println("=========");
 
-        System.out.println("PHASE3");
-        System.out.println("=========");
+        if (latch.getCount() == 0) {
+            i++;
+            System.out.println("=========");
+            System.out.println("PHASE" + i);
+            System.out.println("=========");
+        }
 
         //Phase3
         ArrayList<ActionConfig> phase3Actions = config.getPhase3();
@@ -109,10 +118,6 @@ public class Simulator {
         for (ActionConfig ac : phase3Actions) {
             doAction(ac);
         }
-
-
-
-
 
     }
 
@@ -182,6 +187,7 @@ public class Simulator {
         if (action != null) {
             Promise<String> promise = action.getResult();
             promise.subscribe(() -> {
+                System.out.println("Latch: " + latch.getCount());
                 latch.countDown();
             });
         }
