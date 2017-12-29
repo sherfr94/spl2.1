@@ -11,10 +11,18 @@ public class CloseACourse extends Action<String> {
 
     private String courseName;
 
+    /**
+     * Constructor
+     *
+     * @param courseName
+     */
     public CloseACourse(String courseName) {
         this.courseName = courseName;
     }
 
+    /**
+     * action
+     */
     @Override
     protected void start() {
 
@@ -30,7 +38,7 @@ public class CloseACourse extends Action<String> {
         then(actions, () -> {
             privateState.getCourseList().remove(courseName);
             complete("Close Course success: \tClosed course: " + courseName);
-            System.out.println(getResult().get());
+            //System.out.println(getResult().get());
         });
 
 

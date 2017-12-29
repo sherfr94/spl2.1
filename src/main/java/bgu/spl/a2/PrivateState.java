@@ -10,7 +10,7 @@ import java.util.List;
  * it holds actions that the actor has executed so far
  * IMPORTANT: You can not add any field to this class.
  */
-public abstract class PrivateState implements Serializable {//TODO can we add serializable
+public abstract class PrivateState implements Serializable {
 
 
 

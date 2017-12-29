@@ -142,14 +142,25 @@ public abstract class Action<R> {
         this.actionName = actionName;
     }
 
+    /**
+     * @return actor id
+     */
     public String getActorId() {
         return actorId;
     }
 
+    /**
+     *
+     * @return the actor state
+     */
     public PrivateState getPrivateState() {
         return actorState;
     }
 
+    /**
+     *
+     * @return the pool
+     */
     public ActorThreadPool getPool() {
         return pool;
     }

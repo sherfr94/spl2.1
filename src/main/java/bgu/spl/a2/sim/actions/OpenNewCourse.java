@@ -13,6 +13,13 @@ public class OpenNewCourse extends Action<String> {
     private Integer numOfSpaces;
     private ArrayList<String> prerequisites;
 
+    /**
+     * Constructor
+     *
+     * @param courseName
+     * @param numOfSpaces
+     * @param prequisites
+     */
     public OpenNewCourse(String courseName, Integer numOfSpaces, ArrayList<String> prequisites) {
         setActionName("Open Course");
         this.courseName = courseName;
@@ -21,7 +28,9 @@ public class OpenNewCourse extends Action<String> {
 
     }
 
-
+    /**
+     * action
+     */
     @Override
     protected void start() {
 
@@ -41,7 +50,7 @@ public class OpenNewCourse extends Action<String> {
             CoursePrivateState sub = ((CoursePrivateState) (subOpenNewCourse.getPrivateState()));
             complete("OpenNewCourse sucess: \tOpened course: " + courseName + " (" + sub.getAvailableSpots() + ")");
 
-            System.out.println(getResult().get());
+            //System.out.println(getResult().get());
 
         });
 

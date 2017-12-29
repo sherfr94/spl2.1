@@ -13,11 +13,20 @@ public class SubAdministrativeCheck extends Action<Boolean> {
     private ArrayList<String> courses;
     private SuspendingMutex mutex;
 
+    /**
+     * Constructor
+     *
+     * @param courses
+     * @param mutex
+     */
     public SubAdministrativeCheck(ArrayList<String> courses, SuspendingMutex mutex) {
         this.courses = courses;
         this.mutex = mutex;
     }
 
+    /**
+     * action
+     */
     @Override
     protected void start() {
 

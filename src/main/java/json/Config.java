@@ -6,6 +6,9 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 
 public class Config {
+    /**
+     * This class deserializes json to config
+     */
 
     @SerializedName("threads")
     @Expose

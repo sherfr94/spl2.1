@@ -10,11 +10,20 @@ public class SubOpenNewCourse extends Action<String> {
     private Integer numOfSpaces;
     private ArrayList<String> prerequisites;
 
+    /**
+     * Constructor
+     *
+     * @param numOfSpaces
+     * @param prerequisites
+     */
     public SubOpenNewCourse(Integer numOfSpaces, ArrayList<String> prerequisites) {
         this.numOfSpaces = numOfSpaces;
         this.prerequisites = prerequisites;
     }
 
+    /**
+     * action
+     */
     @Override
     protected void start() {
         ((CoursePrivateState) getPrivateState()).setAvailableSpots(numOfSpaces);

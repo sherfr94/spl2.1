@@ -12,6 +12,12 @@ public class RegisterWithPreferences extends Action<String> {
     private ArrayList<String> grades;
     private int i;
 
+    /**
+     * Constructor
+     *
+     * @param courses
+     * @param grades
+     */
     public RegisterWithPreferences(ArrayList<String> courses, ArrayList<String> grades) {
         this.courses = courses;
         this.grades = grades;
@@ -19,11 +25,14 @@ public class RegisterWithPreferences extends Action<String> {
         else i = courses.size();
     }
 
+    /**
+     * action
+     */
     @Override
     protected void start() {
         if (i == 0) {
             complete("Preferences fail: \tStudent: " + getActorId());
-            System.out.println(getResult().get());
+            //System.out.println(getResult().get());
         } else {
             StudentPrivateState privateState = ((StudentPrivateState) getPrivateState());
             ParticipatingInCourse participating = new ParticipatingInCourse(getActorId(), grades.get(0));
@@ -37,7 +46,7 @@ public class RegisterWithPreferences extends Action<String> {
             then(actions, () -> {
                 if (participating.getResult().get().contains("success")) {
                     complete("Preferences success: \tStudent: " + getActorId());
-                    System.out.println(getResult().get());
+                    //System.out.println(getResult().get());
                 } else {
 
                     RegisterWithPreferences registerWithPreferences = new RegisterWithPreferences(courses, grades);

@@ -10,13 +10,18 @@ import java.util.HashMap;
 public class Warehouse {
 
     private static HashMap<String, SuspendingMutex> warehouse;
-
     private static Warehouse instance = null;
 
+    /**
+     * Constructor
+     */
     private Warehouse() {
         warehouse = new HashMap<>();
     }
 
+    /**
+     * @return instance of warehouse
+     */
     public static Warehouse getInstance() {
         if (instance == null) {
 
@@ -25,11 +30,20 @@ public class Warehouse {
         return instance;
     }
 
-    public static void addCmputer(Computer computer) {
+    /**
+     * adds computer to warehouse map
+     * @param computer
+     */
+    public static void addComputer(Computer computer) {
         SuspendingMutex suspendingMutex = new SuspendingMutex(computer);
         warehouse.put(computer.getComputerType(), suspendingMutex);
     }
 
+    /**
+     *
+     * @param computerType
+     * @return mutex for computer type
+     */
     public static SuspendingMutex getMutex(String computerType) {
         return warehouse.get(computerType);
     }

@@ -22,10 +22,16 @@ public class VersionMonitor {
 
     private AtomicInteger version = new AtomicInteger(0);
 
-    synchronized public int getVersion() {
+    /**
+     * @return the verison monitor
+     */
+    public int getVersion() {
         return version.get();
     }
 
+    /**
+     * increment version monitor
+     */
     public void inc() {
         version.incrementAndGet();
         synchronized (this) {
@@ -33,11 +39,15 @@ public class VersionMonitor {
         }
     }
 
-    public void await(int version) throws InterruptedException {
-        synchronized (this) {
-            while (getVersion() == version) {
-                wait();
-            }
+    /**
+     * wait on version monitor
+     * @param version
+     * @throws InterruptedException
+     */
+    public synchronized void await(int version) throws InterruptedException {
+
+        while (getVersion() == version) {
+            wait();
 
         }
 

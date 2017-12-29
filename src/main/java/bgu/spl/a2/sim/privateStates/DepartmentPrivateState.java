@@ -24,18 +24,33 @@ public class DepartmentPrivateState extends PrivateState {
 
     }
 
+    /**
+     * @return course list
+     */
     public List<String> getCourseList() {
         return courseList;
     }
 
+    /**
+     *
+     * @return student list
+     */
     public List<String> getStudentList() {
         return studentList;
     }
 
+    /**
+     * adds student to student list
+     * @param studentID
+     */
     public void addStudent(String studentID) {
         this.studentList.add(studentID);
     }
 
+    /**
+     * adds course to course list
+     * @param courseName
+     */
     public void addCourse(String courseName) {
         this.courseList.add(courseName);
     }

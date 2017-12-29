@@ -11,13 +11,20 @@ public class Unregister extends Action<String> {
 
     private String studentID;
 
+    /**
+     * Constructor
+     *
+     * @param studentID
+     */
     public Unregister(String studentID) {
         this.studentID = studentID;
     }
 
+    /**
+     * action
+     */
     @Override
     protected void start() {
-        //TODO BUG: freeze
 
         //COURSE
 
@@ -35,10 +42,10 @@ public class Unregister extends Action<String> {
                 privateState.setAvailableSpots(privateState.getAvailableSpots() + 1);
                 privateState.setRegistered(privateState.getRegistered() - 1);
                 complete("Unregister success: \tStudent " + studentID + " unregistered from course: " + getActorId());
-                System.out.println(getResult().get());
+                //System.out.println(getResult().get());
             } else {
                 complete("Unregister fail: \tStudent wasn't registered");
-                System.out.println(getResult().get());
+                //System.out.println(getResult().get());
             }
         });
 

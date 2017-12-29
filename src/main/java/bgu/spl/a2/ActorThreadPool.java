@@ -68,6 +68,11 @@ public class ActorThreadPool {
         }
     }
 
+    /**
+     * finds an action to execute and executes it.
+     *
+     * @return true if found action, false if not
+     */
     public synchronized boolean findAndExecute() {
         try {
             boolean foundAction = false;
@@ -191,6 +196,10 @@ public class ActorThreadPool {
 
     }
 
+    /**
+     *
+     * @return isTaken map
+     */
     public HashMap<String, AtomicBoolean> getIsTaken() {
         return isTaken;
     }

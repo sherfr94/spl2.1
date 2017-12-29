@@ -13,15 +13,24 @@ public class AdministrativeCheck extends Action<String> {
     private ArrayList<String> courses;
     private SuspendingMutex mutex;
 
+    /**
+     * Constructor
+     *
+     * @param students
+     * @param courses
+     * @param mutex
+     */
     public AdministrativeCheck(ArrayList<String> students, ArrayList<String> courses, SuspendingMutex mutex) {
         this.students = students;
         this.courses = courses;
         this.mutex = mutex;
     }
 
+    /**
+     * action
+     */
     @Override
     protected void start() {
-
 
         ArrayList<Action<?>> actions = new ArrayList<>();
         for (String s : students) {
@@ -33,7 +42,7 @@ public class AdministrativeCheck extends Action<String> {
 
         then(actions, () -> {
             complete("AdminCheck success:");
-            System.out.println(getResult().get());
+            //System.out.println(getResult().get());
         });
 
 

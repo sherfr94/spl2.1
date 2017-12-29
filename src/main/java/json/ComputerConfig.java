@@ -4,6 +4,9 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class ComputerConfig {
+    /**
+     * This class represents deserializing json to computer
+     */
 
     @SerializedName("Type")
     @Expose

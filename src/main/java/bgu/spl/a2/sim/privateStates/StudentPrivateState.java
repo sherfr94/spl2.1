@@ -22,18 +22,36 @@ public class StudentPrivateState extends PrivateState {
 
     }
 
+    /**
+     * add grade to map
+     *
+     * @param name
+     * @param grade
+     */
     public void addGrade(String name, Integer grade) {
         grades.put(name, grade);
     }
 
+    /**
+     *
+     * @return get grades map
+     */
     public HashMap<String, Integer> getGrades() {
         return grades;
     }
 
+    /**
+     *
+     * @return signature value
+     */
     public long getSignature() {
         return signature;
     }
 
+    /**
+     * set signature value
+     * @param signature
+     */
     public void setSignature(long signature) {
         this.signature = signature;
     }

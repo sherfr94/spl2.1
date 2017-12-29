@@ -12,10 +12,18 @@ public class AddStudent extends Action<String> {
 
     private String studentID;
 
+    /**
+     * Constructor
+     *
+     * @param studentID
+     */
     public AddStudent(String studentID) {
         this.studentID = studentID;
     }
 
+    /**
+     * action
+     */
     @Override
     protected void start() {
 
@@ -33,7 +41,7 @@ public class AddStudent extends Action<String> {
             }
 
             complete("AddStudent success: \tAdded student: " + studentID + " ");
-            System.out.println(getResult().get());
+            //System.out.println(getResult().get());
 
         });
 

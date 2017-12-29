@@ -27,34 +27,65 @@ public class CoursePrivateState extends PrivateState {
         prequisites = new ArrayList<>();
     }
 
+    /**
+     * @return available spots
+     */
     public Integer getAvailableSpots() {
         return availableSpots;
     }
 
+    /**
+     * set available spots
+     * @param availableSpots
+     */
     public void setAvailableSpots(Integer availableSpots) {
         this.availableSpots = availableSpots;
     }
 
+    /**
+     *
+     * @return num of registered students
+     */
     public Integer getRegistered() {
         return registered;
     }
 
+    /**
+     * set num of registered students
+     * @param registered
+     */
     public void setRegistered(Integer registered) {
         this.registered = registered;
     }
 
+    /**
+     *
+     * @return registered students
+     */
     public List<String> getRegStudents() {
         return regStudents;
     }
 
+    /**
+     * set registered students
+     * @param regStudents
+     */
     public void setRegStudents(List<String> regStudents) {
         this.regStudents = regStudents;
     }
 
+    /**
+     *
+     * @return prerequisites list
+     */
     public List<String> getPrequisites() {
         return prequisites;
     }
 
+    /**
+     * set prerequisites list
+     * @param prequisites
+     */
     public void setPrequisites(List<String> prequisites) {
         this.prequisites = prequisites;
     }

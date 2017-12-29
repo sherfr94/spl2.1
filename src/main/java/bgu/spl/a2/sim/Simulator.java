@@ -30,14 +30,19 @@ public class Simulator {
 
     private static Config config;
     private static CountDownLatch latch;
-    //private static int i = 1;
-    private static Object lock;
+    public static ActorThreadPool actorThreadPool;
 
+    /**
+     * set simulator config to read json
+     *
+     * @param config
+     */
     public static void setConfig(Config config) {
         Simulator.config = config;
     }
 
-    public static ActorThreadPool actorThreadPool;
+
+
 
     /**
      * Begin the simulation Should not be called before attachActorThreadPool()
@@ -50,12 +55,9 @@ public class Simulator {
             Computer computer = new Computer(cc.getType());
             computer.setFailSig(cc.getFailSig());
             computer.setSuccessSig(cc.getSuccessSig());
-            Warehouse.addCmputer(computer);
+            Warehouse.addComputer(computer);
         }
 
-        System.out.println("=========");
-        System.out.println("PHASE1");
-        System.out.println("=========");
 
         //Phase1
         ArrayList<ActionConfig> phase1Actions = config.getPhase1();
@@ -76,13 +78,6 @@ public class Simulator {
 
 
 
-        if (latch.getCount() == 0) {
-
-            System.out.println("=========");
-            System.out.println("PHASE2");
-            System.out.println("=========");
-        }
-
 
         //Phase2
         ArrayList<ActionConfig> phase2Actions = config.getPhase2();
@@ -99,12 +94,6 @@ public class Simulator {
         }
 
 
-        if (latch.getCount() == 0) {
-
-            System.out.println("=========");
-            System.out.println("PHASE3");
-            System.out.println("=========");
-        }
 
         //Phase3
         ArrayList<ActionConfig> phase3Actions = config.getPhase3();
@@ -137,7 +126,10 @@ public class Simulator {
         return actorThreadPool.getPrivateStateMap();
     }
 
-
+    /**
+     * find action type, create, and submit to pool
+     * @param ac from json
+     */
     public static void doAction(ActionConfig ac) {
 
         Action<String> action = null;
@@ -149,73 +141,104 @@ public class Simulator {
                 latch.countDown();
 
             });
-            actorThreadPool.submit(action, ac.getDepartment(), new DepartmentPrivateState());
+
+            DepartmentPrivateState privateState = new DepartmentPrivateState();
+            if (actorThreadPool.getPrivateState(ac.getDepartment()) != null) {
+                privateState = (DepartmentPrivateState) actorThreadPool.getPrivateState(ac.getDepartment());
+            }
+            actorThreadPool.submit(action, ac.getDepartment(), privateState);
             actorThreadPool.getPrivateState(ac.getDepartment()).addRecord(actionName);
+
         } else if (actionName.equals("Add Student")) {
             action = new AddStudent(ac.getStudent());
             action.getResult().subscribe(() -> {
                 latch.countDown();
             });
-            actorThreadPool.submit(action, ac.getDepartment(), new DepartmentPrivateState());
+            DepartmentPrivateState privateState = new DepartmentPrivateState();
+            if (actorThreadPool.getPrivateState(ac.getDepartment()) != null) {
+                privateState = (DepartmentPrivateState) actorThreadPool.getPrivateState(ac.getDepartment());
+            }
+            actorThreadPool.submit(action, ac.getDepartment(), privateState);
             actorThreadPool.getPrivateState(ac.getDepartment()).addRecord(actionName);
+
         } else if (actionName.equals("Participate In Course")) {
             action = new ParticipatingInCourse(ac.getStudent(), ac.getGrade().get(0));
             action.getResult().subscribe(() -> {
                 latch.countDown();
             });
-            actorThreadPool.submit(action, ac.getCourse(), new CoursePrivateState());
+            CoursePrivateState privateState = new CoursePrivateState();
+            if (actorThreadPool.getPrivateState(ac.getCourse()) != null) {
+                privateState = (CoursePrivateState) actorThreadPool.getPrivateState(ac.getCourse());
+            }
+            actorThreadPool.submit(action, ac.getCourse(), privateState);
             actorThreadPool.getPrivateState(ac.getCourse()).addRecord(actionName);
+
         } else if (actionName.equals("Unregister")) {
             action = new Unregister(ac.getStudent());
             action.getResult().subscribe(() -> {
                 latch.countDown();
             });
-            actorThreadPool.submit(action, ac.getCourse(), new CoursePrivateState());
+            CoursePrivateState privateState = new CoursePrivateState();
+            if (actorThreadPool.getPrivateState(ac.getCourse()) != null) {
+                privateState = (CoursePrivateState) actorThreadPool.getPrivateState(ac.getCourse());
+            }
+            actorThreadPool.submit(action, ac.getCourse(), privateState);
             actorThreadPool.getPrivateState(ac.getCourse()).addRecord(actionName);
-        } else if (actionName.equals("Close Course")) {//TODO how to write close a course
+
+        } else if (actionName.equals("Close Course")) {
             action = new CloseACourse(ac.getCourse());
             action.getResult().subscribe(() -> {
                 latch.countDown();
             });
-            actorThreadPool.submit(action, ac.getDepartment(), new DepartmentPrivateState());
+            DepartmentPrivateState privateState = new DepartmentPrivateState();
+            if (actorThreadPool.getPrivateState(ac.getDepartment()) != null) {
+                privateState = (DepartmentPrivateState) actorThreadPool.getPrivateState(ac.getDepartment());
+            }
+            actorThreadPool.submit(action, ac.getDepartment(), privateState);
             actorThreadPool.getPrivateState(ac.getDepartment()).addRecord(actionName);
+
         } else if (actionName.equals("Add Spaces")) {
             action = new OpeningNewPlaceInACourse(ac.getNumber());
             action.getResult().subscribe(() -> {
                 latch.countDown();
             });
-            actorThreadPool.submit(action, ac.getCourse(), new CoursePrivateState());
+            CoursePrivateState privateState = new CoursePrivateState();
+            if (actorThreadPool.getPrivateState(ac.getCourse()) != null) {
+                privateState = (CoursePrivateState) actorThreadPool.getPrivateState(ac.getCourse());
+            }
+            actorThreadPool.submit(action, ac.getCourse(), privateState);
             actorThreadPool.getPrivateState(ac.getCourse()).addRecord(actionName);
+
         } else if (actionName.equals("Administrative Check")) {
             action = new AdministrativeCheck(ac.getStudents(), ac.getConditions(), Warehouse.getMutex(ac.getComputer()));
             action.getResult().subscribe(() -> {
                 latch.countDown();
             });
-            actorThreadPool.submit(action, ac.getDepartment(), new DepartmentPrivateState());
+            DepartmentPrivateState privateState = new DepartmentPrivateState();
+            if (actorThreadPool.getPrivateState(ac.getDepartment()) != null) {
+                privateState = (DepartmentPrivateState) actorThreadPool.getPrivateState(ac.getDepartment());
+            }
+            actorThreadPool.submit(action, ac.getDepartment(), privateState);
             actorThreadPool.getPrivateState(ac.getDepartment()).addRecord(actionName);
-        } else if (actionName.equals("Register With Preferences")) {//TODO complete params
+
+        } else if (actionName.equals("Register With Preferences")) {
             action = new RegisterWithPreferences(ac.getPreferences(), ac.getGrade());
             action.getResult().subscribe(() -> {
                 latch.countDown();
             });
-            actorThreadPool.submit(action, ac.getStudent(), new StudentPrivateState());
+            StudentPrivateState privateState = new StudentPrivateState();
+            if (actorThreadPool.getPrivateState(ac.getStudent()) != null) {
+                privateState = (StudentPrivateState) actorThreadPool.getPrivateState(ac.getStudent());
+            }
+            actorThreadPool.submit(action, ac.getStudent(), privateState);
             actorThreadPool.getPrivateState(ac.getStudent()).addRecord(actionName);
         }
-
-
-//        if (action != null) {
-//            Promise<String> promise = action.getResult();
-//            promise.subscribe(() -> {
-//                System.out.println("Latch: " + latch.getCount()+" "+actionName);
-//                latch.countDown();
-//            });
-//        }
 
 
     }
 
 
-    public static int main(String[] args) throws FileNotFoundException {
+    public static void main(String[] args) throws FileNotFoundException {
 
         String fileName = args[0];
 
@@ -250,8 +273,6 @@ public class Simulator {
         }
 
 
-        //TODO do not forget warehouse and computer
-        return 1;
 
     }
 }

@@ -28,7 +28,8 @@ public class Promise<T> {
      * @throws IllegalStateException in the case where this method is called and this object is
      *                               not yet resolved
      */
-    synchronized public T get() {
+    public T get() {
+        if (!isResolved) throw new IllegalStateException();
         return value;
     }
 
@@ -53,7 +54,7 @@ public class Promise<T> {
      * @param value - the value to resolve this promise object with
      * @throws IllegalStateException in the case where this object is already resolved
      */
-    public synchronized void resolve(T value) {
+    public void resolve(T value) {
         if (isResolved()) throw new IllegalStateException("Already resolved");
 
         this.value = value;
@@ -61,7 +62,7 @@ public class Promise<T> {
 
         if (subscribers.isEmpty()) return;
         for (callback subscriber : subscribers) {
-            subscriber.call(); //TODO: BUG nullpointerexception if(subscriber!=null)
+            subscriber.call();
         }
     }
 
@@ -77,7 +78,7 @@ public class Promise<T> {
      *
      * @param callback the callback to be called when the promise object is resolved
      */
-    public void subscribe(callback callback) {
+    public synchronized void subscribe(callback callback) {
         if (isResolved) callback.call();
         else subscribers.add(callback);
     }

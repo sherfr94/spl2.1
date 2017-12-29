@@ -6,6 +6,9 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 
 public class ActionConfig {
+    /**
+     * This class represents deserializing json to actions
+     */
 
     @SerializedName("Action")
     @Expose

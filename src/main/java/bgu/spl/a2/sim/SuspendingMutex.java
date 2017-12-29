@@ -65,6 +65,9 @@ public class SuspendingMutex {
 
     }
 
+    /**
+     * @return computer of mutex
+     */
     public Computer getComputer() {
         return computer;
     }

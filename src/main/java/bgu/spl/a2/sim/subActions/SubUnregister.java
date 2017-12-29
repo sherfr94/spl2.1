@@ -7,10 +7,18 @@ public class SubUnregister extends Action<Boolean> {
 
     private String courseName;
 
+    /**
+     * constructor
+     *
+     * @param courseName
+     */
     public SubUnregister(String courseName) {
         this.courseName = courseName;
     }
 
+    /**
+     * action
+     */
     @Override
     protected void start() {
 

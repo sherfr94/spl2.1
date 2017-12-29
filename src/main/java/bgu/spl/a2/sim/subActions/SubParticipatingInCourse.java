@@ -12,12 +12,22 @@ public class SubParticipatingInCourse extends Action<Boolean> {
     private String courseName;
     private List<String> prerequisites;
 
+    /**
+     * constructor
+     *
+     * @param grade
+     * @param courseName
+     * @param prerequisites
+     */
     public SubParticipatingInCourse(String grade, String courseName, List<String> prerequisites) {
         this.grade = grade;
         this.courseName = courseName;
         this.prerequisites = prerequisites;
     }
 
+    /**
+     * action
+     */
     @Override
     protected void start() {
 
@@ -26,7 +36,7 @@ public class SubParticipatingInCourse extends Action<Boolean> {
 
             return;
         }
-       // System.out.println("XXX1" + getPool().getIsTaken().get(courseName));
+
         boolean problem = false;
         if (!(prerequisites.isEmpty())) {
             for (String course : prerequisites) {
@@ -54,10 +64,6 @@ public class SubParticipatingInCourse extends Action<Boolean> {
             complete(true);
 
         }
-
-
-     //   System.out.println("XXX2" + getPool().getIsTaken().get(getActorId()));
-
 
     }
 }

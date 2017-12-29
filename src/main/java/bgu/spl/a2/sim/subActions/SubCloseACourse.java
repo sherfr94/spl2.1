@@ -8,6 +8,9 @@ import java.util.ArrayList;
 
 public class SubCloseACourse extends Action<Boolean> {
 
+    /**
+     * action
+     */
     @Override
     protected void start() {
 
@@ -36,8 +39,6 @@ public class SubCloseACourse extends Action<Boolean> {
             privateState.setAvailableSpots(-1);
             complete(true);
         }
-
-
 
 
     }
